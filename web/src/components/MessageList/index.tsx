@@ -39,24 +39,12 @@ export function MessageList(){
     useEffect(()=>{
         const timer = setInterval(() =>{             
             if(!(messagesQueue.length > 0))return;            
-            // function newListValue(oldListMessage:Message[]|[]){
-            //     let messageQueue = messagesQueue.shift() as Message;
-            //     console.log(messageQueue);                
-            //     oldListMessage.pop();
-            //     return([
-            //         messageQueue,
-            //         ...oldListMessage
-            //         ]
-            //     );
-            // }
-            // setListMessages(newListValue);
-
-            setListMessages(newListValue =>[
-                messagesQueue[0],
-                newListValue[0],
-                newListValue[1]
-            ].filter(Boolean));
-            messagesQueue.shift();
+            
+            setListMessages(prevState =>{
+                const firstMessage = messagesQueue.shift() as Message;
+                prevState.pop();
+                return [firstMessage,...prevState];
+            });
                         
         },3000);
     },[]);
@@ -66,8 +54,8 @@ export function MessageList(){
         <div className={styles.messageListWrapper}>
             <img src={logo} alt="DoWhile 2021" />
             <ul className={styles.messageList}>
-                {listMessages.map(message =>(
-                    <li key={message.id} className={styles.message}>
+                {listMessages.map((message, index) =>(
+                    <li key={index} className={styles.message}>
                         <p className={styles.messageContent}>
                             {message.text}
                         </p>
